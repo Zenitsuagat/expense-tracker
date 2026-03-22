@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Expense Tracker</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 20px; background: #f5f5f5; }
+        h1 { color: #333; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+        th { background: #4a90d9; color: white; padding: 12px; text-align: left; }
+        td { padding: 10px 12px; border-bottom: 1px solid #eee; }
+        tr:last-child td { border-bottom: none; }
+        a { color: #4a90d9; text-decoration: none; margin-right: 8px; }
+        a.delete { color: #e74c3c; }
+        .form-card { background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); margin-bottom: 24px; }
+        .form-row { display: flex; gap: 12px; flex-wrap: wrap; }
+        input, select { padding: 8px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
+        button { padding: 8px 20px; background: #4a90d9; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
+        button:hover { background: #357abd; }
+    </style>
+</head>
+<body>
+
+<h1>💰 Expense Tracker 
+    <span style="font-size:14px; background:#4a90d9; color:white; 
+                 padding:4px 12px; border-radius:20px; vertical-align:middle;">
+        <span th:text="${expenses.size()}"></span> expense(s)
+    </span>
+</h1>
+
+<!-- Add Expense Form -->
+<div class="form-card">
+    <h3 style="margin-top:0">Add New Expense</h3>
+    <form th:action="@{/add}" th:object="${newExpense}" method="post">
+        <div class="form-row">
+            <input type="text"   th:field="*{category}"    placeholder="Category (e.g. Food)" required/>
+            <input type="number" th:field="*{amount}"      placeholder="Amount" step="0.01" required/>
+            <input type="date"   th:field="*{date}"        required/>
+            <input type="text"   th:field="*{description}" placeholder="Description (optional)"/>
+            <button type="submit">Add</button>
+        </div>
+    </form>
+</div>
+
+<!-- Expenses Table -->
+<table>
+    <tr>
+        <th>Category</th>
+        <th>Amount (₹)</th>
+        <th>Date</th>
+        <th>Description</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="expense : ${expenses}">
+        <td th:text="${expense.category}"></td>
+        <td th:text="${expense.amount}"></td>
+        <td th:text="${expense.date}"></td>
+        <td th:text="${expense.description}"></td>
+        <td>
+            <a th:href="@{/edit/{id}(id=${expense.id})}">Edit</a>
+            <a th:href="@{/delete/{id}(id=${expense.id})}" class="delete"
+               onclick="return confirm('Delete this expense?')">Delete</a>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(expenses)}">
+        <td colspan="5" style="text-align:center; color:#999; padding:20px;">
+            No expenses yet. Add one above!
+        </td>
+    </tr>
+
+    <!-- Total Row -->
+    <tr style="background: #eaf3ff; font-weight: bold;">
+        <td>Total</td>
+        <td th:text="'₹ ' + ${#aggregates.sum(expenses.![amount])}"></td>
+        <td colspan="3"></td>
+    </tr>
+</table>
+
+</body>
+</html>
