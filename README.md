@@ -22,21 +22,6 @@ It allows users to manage daily expenses with basic CRUD operations.
 * **Build Tool:** Maven
 
 
-
-## 📂 Project Structure
-
-src/
- └── main/
-     ├── java/com/example/expensetracker/
-     │   ├── controller/      # Handles HTTP requests
-     │   ├── model/           # Entity classes
-     │   ├── repository/      # Database operations (JPA)
-     │   └── ExpenseTrackerApplication.java
-     └── resources/
-         ├── templates/       # HTML files (Thymeleaf)
-         └── application.properties
-
-
 ## 👨‍💻 Author
 
 Developed by **Hariharan Zen**
